@@ -1,9 +1,6 @@
 import styled from 'styled-components';
 
-interface ITextProps {
-  fontSize?: number;
-  fontWeight?: number;
-}
+import { ReactComponent as Folder } from 'assets/images/folder.svg';
 
 export const Container = styled.div`
   width: 100vw;
@@ -41,11 +38,15 @@ export const BottomContainer = styled.div`
   margin-bottom: 20px;
 `;
 
-export const Text = styled.p<ITextProps>`
+export const Text = styled.p`
   color: ${({ theme }) => theme.darkGray};
   font-family: 'TT Norms Pro', sans-serif;
-  font-size: ${({ fontSize }) => fontSize || 48}px;
-  font-weight: ${({ fontWeight }) => fontWeight || 400};
+  font-size: 48px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 `;
 
 export const Title = styled.h1`
@@ -70,7 +71,74 @@ export const Projects = styled.div`
   height: 500px;
   width: 70%;
   overflow-y: scroll;
+  overflow-x: hidden;
   margin: 5px 0 20px;
+  padding: 20px 0 20px 35px;
+
+  ::-webkit-scrollbar {
+    width: 30px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: ${({ theme }) => theme.lightGray};
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.gray};
+    border: 10px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+    border-radius: 100px;
+  }
+`;
+
+export const FolderIcon = styled(Folder)`
+  min-width: 48px;
+  min-height: 48px;
+  transition: all 0.2s;
+
+  path {
+    stroke: ${({ theme }) => theme.darkGray};
+  }
+`;
+
+export const Project = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  border-radius: 10px;
+  padding: 15px;
+  margin: 15px 0;
+  transition: all 0.2s;
+  cursor: default;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -o-user-select: none;
+
+  div {
+    width: 0;
+  }
+
+  :hover {
+    background: ${({ theme }) => theme.pink};
+
+    div {
+      width: auto;
+    }
+
+    ${Text} {
+      color: ${({ theme }) => theme.white} !important;
+    }
+
+    ${FolderIcon} {
+      path {
+        stroke: ${({ theme }) => theme.white};
+      }
+    }
+  }
 `;
 
 export const Button = styled.button`
@@ -79,7 +147,7 @@ export const Button = styled.button`
   align-items: center;
   justify-content: space-between;
   color: ${({ theme }) => theme.white};
-  background-color: ${({ theme }) => theme.pink};
+  background: ${({ theme }) => theme.pink};
   font-size: 36px;
   font-family: 'TT Norms Pro', sans-serif;
   font-weight: 700;
