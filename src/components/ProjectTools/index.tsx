@@ -28,16 +28,16 @@ const ProjectTools: React.FC<IProjectProps> = ({
 }) => {
   return (
     <IconsContainer style={style}>
-      <PenIcon onClick={onRename} color={color} />
-      <TrashIcon onClick={onDelete} color={color} />
+      <PenIcon onClick={onRename} color={color} title="Rename project" />
+      <TrashIcon onClick={onDelete} color={color} title="Delete project" />
       <Link
         to={goBack ? '/' : `/project/${name}`}
         style={{ height: 32, width: 32 }}
       >
         {goBack ? (
-          <ArrowLeftIcon color={color} />
+          <ArrowLeftIcon color={color} title="Go back to home" />
         ) : (
-          <ArrowRightIcon color={color} />
+          <ArrowRightIcon color={color} title="Open project" />
         )}
       </Link>
     </IconsContainer>
