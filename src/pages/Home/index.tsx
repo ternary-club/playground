@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
-import { ThemeContext } from 'styled-components';
+import React from 'react';
 
 import { ReactComponent as TaylorImage } from 'assets/images/taylor.svg';
 import { ReactComponent as PlusIcon } from 'assets/images/plus.svg';
 
-import ProjectTools from 'components/ProjectTools';
+import { useTheme } from 'hooks/useTheme';
+
+import { ProjectTools } from 'components/ProjectTools';
 
 import {
   Container,
@@ -21,7 +22,7 @@ import {
 } from './styles';
 
 const Home: React.FC = () => {
-  const themeContext = useContext(ThemeContext);
+  const themeContext = useTheme();
 
   const handleRenameProject = (project: string) => {
     console.log('Project renamed', project);
@@ -82,4 +83,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export { Home };

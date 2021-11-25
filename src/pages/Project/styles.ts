@@ -66,4 +66,5 @@ export const CodeBlock = styled.div`
   background: ${({ theme }) => theme.lightGray};
   width: 100%;
   height: 100%;
+  border-radius: 10px 10px 10px 0;
 `;

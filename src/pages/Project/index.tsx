@@ -1,11 +1,13 @@
-import React, { useContext } from 'react';
-import { ThemeContext } from 'styled-components';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import Editor from 'react-simple-code-editor';
 
 import { ReactComponent as HammerIcon } from 'assets/images/hammer.svg';
 import { ReactComponent as TriangleIcon } from 'assets/images/triangle.svg';
 
-import ProjectTools from 'components/ProjectTools';
+import { useTheme } from 'hooks/useTheme';
+
+import { ProjectTools } from 'components/ProjectTools';
 
 import {
   Container,
@@ -22,9 +24,11 @@ interface RouteParams {
 }
 
 const Project: React.FC = () => {
-  const themeContext = useContext(ThemeContext);
+  const theme = useTheme();
 
   const { name } = useParams<RouteParams>();
+
+  const [code, setCode] = useState('');
 
   const handleBuildProject = () => null;
 
@@ -36,21 +40,21 @@ const Project: React.FC = () => {
         <Name>untitled project</Name>
         <ProjectTools
           name={name}
-          color={themeContext.darkGray}
+          color={theme.darkGray}
           onRename={() => console.log(name)}
           onDelete={() => console.log(name)}
           goBack
         />
         <IconsContainer>
           <IconContainer
-            color={themeContext.green}
+            color={theme.green}
             onClick={handleBuildProject}
             title="Build project"
           >
             <HammerIcon width={32} height={32} />
           </IconContainer>
           <IconContainer
-            color={themeContext.blue}
+            color={theme.blue}
             onClick={handleRunProject}
             title="Run project"
           >
@@ -59,10 +63,27 @@ const Project: React.FC = () => {
         </IconsContainer>
       </Header>
       <Content>
-        <CodeBlock />
+        <CodeBlock>
+          <Editor
+            value={code}
+            onValueChange={text => setCode(text)}
+            highlight={text => (
+              <span style={{ color: theme.black }}>{text}</span>
+            )}
+            tabSize={2}
+            insertSpaces
+            padding={10}
+            style={{
+              width: '100%',
+              height: '100%',
+              fontFamily: '"Fira code", monospace',
+              fontSize: 12,
+            }}
+          />
+        </CodeBlock>
       </Content>
     </Container>
   );
 };
 
-export default Project;
+export { Project };

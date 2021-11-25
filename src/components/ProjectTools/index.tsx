@@ -44,4 +44,4 @@ const ProjectTools: React.FC<IProjectProps> = ({
   );
 };
 
-export default ProjectTools;
+export { ProjectTools };
