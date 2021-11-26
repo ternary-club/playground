@@ -5,7 +5,7 @@ import { ReactComponent as PlusIcon } from 'assets/images/plus.svg';
 
 import { useTheme } from 'hooks/useTheme';
 
-import { ProjectTools } from 'components/ProjectTools';
+import { ProjectTools } from 'components';
 
 import {
   Container,

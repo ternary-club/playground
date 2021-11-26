@@ -28,4 +28,14 @@ export default createGlobalStyle`
     outline: 0;
     box-sizing: border-box;
   }
+
+  .no-selection {
+    ::-moz-selection {
+      background-color: ${({ theme }) => theme.gray};
+    }
+
+    ::selection {
+      background-color: ${({ theme }) => theme.gray};
+    }
+  }
 `;

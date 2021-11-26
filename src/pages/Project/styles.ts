@@ -62,9 +62,17 @@ export const Content = styled.div`
   width: 100%;
 `;
 
-export const CodeBlock = styled.div`
-  background: ${({ theme }) => theme.lightGray};
-  width: 100%;
+export const Output = styled.div`
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  flex: 1;
+`;
+
+export const Block = styled.div`
+  background: ${({ theme }) => theme.lightGray};
+  height: 100%;
+  flex: 1;
   border-radius: 10px 10px 10px 0;
+  margin: 5px;
 `;

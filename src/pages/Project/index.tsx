@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Editor from 'react-simple-code-editor';
 
 import { ReactComponent as HammerIcon } from 'assets/images/hammer.svg';
 import { ReactComponent as TriangleIcon } from 'assets/images/triangle.svg';
+import { ReactComponent as LanguageIcon } from 'assets/images/language.svg';
 
 import { useTheme } from 'hooks/useTheme';
 
-import { ProjectTools } from 'components/ProjectTools';
+import { ProjectTools, Block } from 'components';
 
 import {
   Container,
@@ -16,7 +17,7 @@ import {
   IconsContainer,
   IconContainer,
   Content,
-  CodeBlock,
+  Output,
 } from './styles';
 
 interface RouteParams {
@@ -33,6 +34,18 @@ const Project: React.FC = () => {
   const handleBuildProject = () => null;
 
   const handleRunProject = () => null;
+
+  const languageIcon = useMemo(
+    () => (
+      <LanguageIcon
+        width={20}
+        height={20}
+        fill={theme.pink}
+        style={{ marginLeft: 10 }}
+      />
+    ),
+    [theme],
+  );
 
   return (
     <Container>
@@ -63,7 +76,9 @@ const Project: React.FC = () => {
         </IconsContainer>
       </Header>
       <Content>
-        <CodeBlock>
+        <Block
+          footer={{ text: 'untitled-project.try', textColor: theme.green }}
+        >
           <Editor
             value={code}
             onValueChange={text => setCode(text)}
@@ -79,8 +94,27 @@ const Project: React.FC = () => {
               fontFamily: '"Fira code", monospace',
               fontSize: 12,
             }}
+            textareaClassName="no-selection"
+            preClassName="no-selection"
           />
-        </CodeBlock>
+        </Block>
+        <Block
+          footer={{
+            text: 'untitled-project.ter',
+            textColor: theme.blue,
+            icon: languageIcon,
+          }}
+        />
+        <Output>
+          <Block footer={{ text: 'problems', textColor: theme.darkGray }} />
+          <Block
+            footer={{
+              text: 'output',
+              textColor: theme.darkGray,
+              icon: languageIcon,
+            }}
+          />
+        </Output>
       </Content>
     </Container>
   );
