@@ -1,6 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs';
+import 'prismjs/components/prism-terry';
+
+import 'styles/prism.css';
 
 import { ReactComponent as HammerIcon } from 'assets/images/hammer.svg';
 import { ReactComponent as TriangleIcon } from 'assets/images/triangle.svg';
@@ -82,9 +86,7 @@ const Project: React.FC = () => {
           <Editor
             value={code}
             onValueChange={text => setCode(text)}
-            highlight={text => (
-              <span style={{ color: theme.black }}>{text}</span>
-            )}
+            highlight={text => highlight(text, languages.terry, 'terry')}
             tabSize={2}
             insertSpaces
             padding={10}
@@ -95,7 +97,7 @@ const Project: React.FC = () => {
               fontSize: 12,
             }}
             textareaClassName="no-selection"
-            preClassName="no-selection"
+            preClassName="no-selection language-javascript"
           />
         </Block>
         <Block

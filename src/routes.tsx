@@ -7,7 +7,7 @@ import theme from 'styles/themes/default';
 import { Home } from 'pages/Home';
 import { Project } from 'pages/Project';
 
-import GlobalStyle from './globalStyle';
+import GlobalStyle from 'styles/globalStyle';
 
 const Routes: React.FC = () => (
   <ThemeProvider theme={theme}>
