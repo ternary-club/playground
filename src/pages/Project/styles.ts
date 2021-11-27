@@ -51,6 +51,10 @@ export const IconContainer = styled.div<IIconContainer>`
   :hover {
     filter: brightness(90%);
   }
+
+  :active {
+    filter: brightness(110%);
+  }
 `;
 
 export const Content = styled.div`
@@ -66,7 +70,7 @@ export const Output = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  flex: 1;
+  flex: 0.3;
 `;
 
 export const Block = styled.div`

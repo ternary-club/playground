@@ -31,6 +31,10 @@ export const PenIcon = styled(Pen)<IIconProps>`
   :hover {
     filter: brightness(90%);
   }
+
+  :active {
+    filter: brightness(110%);
+  }
 `;
 
 export const TrashIcon = styled(Trash)<IIconProps>`
@@ -46,6 +50,10 @@ export const TrashIcon = styled(Trash)<IIconProps>`
 
   :hover {
     filter: brightness(90%);
+  }
+
+  :active {
+    filter: brightness(110%);
   }
 `;
 
@@ -63,6 +71,10 @@ export const ArrowRightIcon = styled(ArrowRight)<IIconProps>`
   :hover {
     filter: brightness(90%);
   }
+
+  :active {
+    filter: brightness(110%);
+  }
 `;
 
 export const ArrowLeftIcon = styled(ArrowLeft)<IIconProps>`
@@ -78,5 +90,9 @@ export const ArrowLeftIcon = styled(ArrowLeft)<IIconProps>`
 
   :hover {
     filter: brightness(90%);
+  }
+
+  :active {
+    filter: brightness(110%);
   }
 `;

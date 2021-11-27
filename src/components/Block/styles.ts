@@ -7,7 +7,7 @@ export const Container = styled.div`
   justify-content: center;
   height: 100%;
   flex: 1;
-  margin: 5px;
+  margin: 0 5px;
 `;
 
 export const Content = styled.div`
@@ -15,6 +15,7 @@ export const Content = styled.div`
   height: 100%;
   width: 100%;
   border-radius: 10px 10px 10px 0;
+  overflow: auto;
 `;
 
 export const Footer = styled.span`
@@ -23,7 +24,7 @@ export const Footer = styled.span`
   padding: 10px;
   font-family: 'TT Norms Pro';
   font-weight: 700;
-  max-width: 50%;
+  max-width: 70%;
   color: ${({ color }) => color};
   display: flex;
   align-items: center;

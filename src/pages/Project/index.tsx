@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-min-noconflict/ext-language_tools';
+import 'ace-builds/src-min-noconflict/ext-searchbox';
 import 'ace-builds/src-noconflict/mode-terry';
 import 'ace-builds/src-noconflict/theme-kuroir';
 
@@ -11,7 +12,7 @@ import { ReactComponent as LanguageIcon } from 'assets/images/language.svg';
 
 import { useTheme } from 'hooks/useTheme';
 
-import { ProjectTools, Block } from 'components';
+import { ProjectTools, Block, Error } from 'components';
 
 import {
   Container,
@@ -81,6 +82,7 @@ const Project: React.FC = () => {
       <Content>
         <Block
           footer={{ text: 'untitled-project.try', textColor: theme.green }}
+          containerStyle={{ flex: 0.4 }}
         >
           <AceEditor
             style={{ borderRadius: '10px 10px 10px 0' }}
@@ -130,9 +132,19 @@ const Project: React.FC = () => {
             textColor: theme.blue,
             icon: languageIcon,
           }}
+          containerStyle={{ flex: 0.3 }}
         />
         <Output>
-          <Block footer={{ text: 'problems', textColor: theme.darkGray }} />
+          <Block
+            footer={{ text: 'problems', textColor: theme.darkGray }}
+            containerStyle={{ maxHeight: '55vh', marginBottom: 10 }}
+            contentStyle={{ padding: '10px 15px' }}
+          >
+            <Error
+              location={{ row: 2, column: 21 }}
+              label="cannot read register in constant value declaration"
+            />
+          </Block>
           <Block
             footer={{
               text: 'output',

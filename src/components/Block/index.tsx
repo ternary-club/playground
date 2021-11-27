@@ -3,6 +3,8 @@ import React from 'react';
 import { Container, Content, Footer } from './styles';
 
 interface IBlockProps {
+  containerStyle?: React.CSSProperties;
+  contentStyle?: React.CSSProperties;
   footer?: {
     text: string;
     textColor: string;
@@ -10,10 +12,15 @@ interface IBlockProps {
   };
 }
 
-const Block: React.FC<IBlockProps> = ({ children, footer }) => {
+const Block: React.FC<IBlockProps> = ({
+  children,
+  footer,
+  containerStyle,
+  contentStyle,
+}) => {
   return (
-    <Container>
-      <Content>{children}</Content>
+    <Container style={containerStyle}>
+      <Content style={contentStyle}>{children}</Content>
       <Footer color={footer?.textColor}>
         {footer?.text}
         {footer?.icon && footer.icon}
