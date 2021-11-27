@@ -121,6 +121,7 @@ const Project: React.FC = () => {
               enableMultiselect: true,
               fontFamily: '"Fira code", "monospace"',
               scrollPastEnd: true,
+              displayIndentGuides: true,
               wrap: true,
             }}
           />
