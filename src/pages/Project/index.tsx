@@ -1,9 +1,10 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-min-noconflict/ext-language_tools';
 import 'ace-builds/src-min-noconflict/ext-searchbox';
 import 'ace-builds/src-noconflict/mode-terry';
+import 'ace-builds/src-noconflict/mode-text';
 import 'ace-builds/src-noconflict/theme-kuroir';
 
 import { ReactComponent as HammerIcon } from 'assets/images/hammer.svg';
@@ -22,10 +23,18 @@ import {
   IconContainer,
   Content,
   Output,
+  OutputTextContainer,
+  OutputText,
 } from './styles';
 
 interface RouteParams {
   name: string;
+}
+
+interface IError {
+  row: number;
+  column: number;
+  label: string;
 }
 
 const Project: React.FC = () => {
@@ -34,12 +43,32 @@ const Project: React.FC = () => {
   const { name } = useParams<RouteParams>();
 
   const [code, setCode] = useState('');
+  const [ternaryCode, _setTernaryCode] = useState('');
+  const [output, _setOutput] = useState('> 5');
+  const [errors, _setErrors] = useState<IError[]>([
+    {
+      row: 2,
+      column: 2,
+      label: 'cannot read register in constant value declaration',
+    },
+  ]);
 
   const editorRef = useRef<AceEditor>(null);
+  const ternaryEditorRef = useRef<AceEditor>(null);
 
-  const handleBuildProject = () => null;
+  const handleRenameProject = useCallback(() => null, []);
 
-  const handleRunProject = () => null;
+  const handleDeleteProject = useCallback(() => null, []);
+
+  const handleBuildProject = useCallback(() => null, []);
+
+  const handleRunProject = useCallback(() => null, []);
+
+  const handleErrorClick = useCallback((error: IError) => {
+    editorRef.current?.editor.scrollToLine(error.row, true, true, () => null);
+    editorRef.current?.editor.gotoLine(error.row, error.column, true);
+    editorRef.current?.editor.focus();
+  }, []);
 
   const languageIcon = useMemo(
     () => (
@@ -53,14 +82,6 @@ const Project: React.FC = () => {
     [theme],
   );
 
-  const errors = [
-    {
-      row: 2,
-      column: 2,
-      label: 'cannot read register in constant value declaration',
-    },
-  ];
-
   return (
     <Container>
       <Header>
@@ -68,8 +89,8 @@ const Project: React.FC = () => {
         <ProjectTools
           name={name}
           color={theme.darkGray}
-          onRename={() => console.log(name)}
-          onDelete={() => console.log(name)}
+          onRename={handleRenameProject}
+          onDelete={handleDeleteProject}
           goBack
         />
         <IconsContainer>
@@ -123,7 +144,7 @@ const Project: React.FC = () => {
               tabSize: 2,
               enableBasicAutocompletion: true,
               enableLiveAutocompletion: true,
-              enableSnippets: false,
+              enableSnippets: true,
               showLineNumbers: true,
               dragEnabled: true,
               // firstLineNumber: -10,
@@ -145,7 +166,32 @@ const Project: React.FC = () => {
             icon: languageIcon,
           }}
           containerStyle={{ flex: 0.3 }}
-        />
+        >
+          <AceEditor
+            ref={ternaryEditorRef}
+            style={{ borderRadius: '10px 10px 10px 0' }}
+            mode="text"
+            theme="kuroir"
+            name="ternaryEditor"
+            fontSize={16}
+            width="100%"
+            height="100%"
+            value={ternaryCode}
+            setOptions={{
+              tabSize: 2,
+              showLineNumbers: true,
+              // firstLineNumber: -10,
+              fontFamily: '"Fira code", "monospace"',
+              scrollPastEnd: true,
+              displayIndentGuides: true,
+              highlightActiveLine: true,
+              showGutter: true,
+              printMargin: true,
+              wrap: true,
+              readOnly: true,
+            }}
+          />
+        </Block>
         <Output>
           <Block
             footer={{ text: 'problems', textColor: theme.darkGray }}
@@ -157,16 +203,7 @@ const Project: React.FC = () => {
                 key={index}
                 location={{ row: err.row, column: err.column }}
                 label={err.label}
-                onClick={() => {
-                  editorRef.current?.editor.scrollToLine(
-                    err.row,
-                    true,
-                    true,
-                    () => null,
-                  );
-                  editorRef.current?.editor.gotoLine(err.row, err.column, true);
-                  editorRef.current?.editor.focus();
-                }}
+                onClick={() => handleErrorClick(err)}
               />
             ))}
           </Block>
@@ -176,7 +213,11 @@ const Project: React.FC = () => {
               textColor: theme.darkGray,
               icon: languageIcon,
             }}
-          />
+          >
+            <OutputTextContainer>
+              <OutputText>{output}</OutputText>
+            </OutputTextContainer>
+          </Block>
         </Output>
       </Content>
     </Container>

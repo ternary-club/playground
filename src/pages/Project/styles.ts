@@ -73,6 +73,19 @@ export const Output = styled.div`
   flex: 0.3;
 `;
 
+export const OutputTextContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  padding: 30px;
+`;
+
+export const OutputText = styled.span`
+  font-family: 'Fira code', 'monospace';
+  font-weight: 700;
+  font-size: 40px;
+  color: ${({ theme }) => theme.black};
+`;
+
 export const Block = styled.div`
   background: ${({ theme }) => theme.lightGray};
   height: 100%;
