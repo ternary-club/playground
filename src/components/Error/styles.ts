@@ -10,6 +10,16 @@ export const Container = styled.div`
   border-radius: 10px;
   padding: 20px 15px;
   margin: 10px 0;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  :hover {
+    filter: brightness(90%);
+  }
+
+  :active {
+    filter: brightness(110%);
+  }
 `;
 
 export const ErrorLocation = styled.span`

@@ -10,11 +10,12 @@ interface IErrorProps {
     column: number;
   };
   label: string;
+  onClick?: () => void;
 }
 
-const Error: React.FC<IErrorProps> = ({ location, label }) => {
+const Error: React.FC<IErrorProps> = ({ location, label, onClick }) => {
   return (
-    <Container>
+    <Container onClick={() => typeof onClick === 'function' && onClick()}>
       <InfoTriangle width={48} height={48} style={{ flex: 0.13 }} />
       <ErrorLocation>
         {location.row}:{location.column}

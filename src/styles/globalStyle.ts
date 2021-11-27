@@ -29,18 +29,8 @@ export default createGlobalStyle`
     box-sizing: border-box;
   }
 
-  .no-selection {
-    ::-moz-selection {
-      background-color: ${({ theme }) => theme.gray};
-    }
-
-    ::selection {
-      background-color: ${({ theme }) => theme.gray};
-    }
-  }
-
   .error-marker {
     position: absolute;
-    background: ${({ theme }) => theme.red};
+    background: ${({ theme }) => theme.red}60;
   }
 `;

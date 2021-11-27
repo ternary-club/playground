@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-min-noconflict/ext-language_tools';
@@ -35,6 +35,8 @@ const Project: React.FC = () => {
 
   const [code, setCode] = useState('');
 
+  const editorRef = useRef<AceEditor>(null);
+
   const handleBuildProject = () => null;
 
   const handleRunProject = () => null;
@@ -50,6 +52,14 @@ const Project: React.FC = () => {
     ),
     [theme],
   );
+
+  const errors = [
+    {
+      row: 2,
+      column: 2,
+      label: 'cannot read register in constant value declaration',
+    },
+  ];
 
   return (
     <Container>
@@ -85,31 +95,30 @@ const Project: React.FC = () => {
           containerStyle={{ flex: 0.4 }}
         >
           <AceEditor
+            ref={editorRef}
             style={{ borderRadius: '10px 10px 10px 0' }}
             mode="terry"
             theme="kuroir"
             name="editor"
             onChange={value => setCode(value)}
             fontSize={16}
-            showPrintMargin
-            showGutter
-            highlightActiveLine
             width="100%"
             height="100%"
             value={code}
-            // annotations={[
-            //   { row: 1, column: 5, type: 'error', text: 'Some error.' },
-            // ]}
-            // markers={[
-            //   {
-            //     startRow: 1,
-            //     startCol: 2,
-            //     endRow: 1,
-            //     endCol: 4,
-            //     className: 'error-marker',
-            //     type: 'text',
-            //   },
-            // ]}
+            annotations={errors.map(err => ({
+              row: err.row - 1,
+              column: err.column,
+              type: 'error',
+              text: err.label,
+            }))}
+            markers={errors.map(err => ({
+              startRow: err.row - 1,
+              startCol: err.column,
+              endRow: err.row - 1,
+              endCol: err.column + 1,
+              className: 'error-marker',
+              type: 'fullLine',
+            }))}
             setOptions={{
               tabSize: 2,
               enableBasicAutocompletion: true,
@@ -122,6 +131,9 @@ const Project: React.FC = () => {
               fontFamily: '"Fira code", "monospace"',
               scrollPastEnd: true,
               displayIndentGuides: true,
+              highlightActiveLine: true,
+              showGutter: true,
+              printMargin: true,
               wrap: true,
             }}
           />
@@ -140,10 +152,23 @@ const Project: React.FC = () => {
             containerStyle={{ maxHeight: '55vh', marginBottom: 10 }}
             contentStyle={{ padding: '10px 15px' }}
           >
-            <Error
-              location={{ row: 2, column: 21 }}
-              label="cannot read register in constant value declaration"
-            />
+            {errors.map((err, index) => (
+              <Error
+                key={index}
+                location={{ row: err.row, column: err.column }}
+                label={err.label}
+                onClick={() => {
+                  editorRef.current?.editor.scrollToLine(
+                    err.row,
+                    true,
+                    true,
+                    () => null,
+                  );
+                  editorRef.current?.editor.gotoLine(err.row, err.column, true);
+                  editorRef.current?.editor.focus();
+                }}
+              />
+            ))}
           </Block>
           <Block
             footer={{
