@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
 import theme from 'styles/themes/default';
@@ -13,9 +13,11 @@ const Routes: React.FC = () => (
   <ThemeProvider theme={theme}>
     <GlobalStyle />
     <BrowserRouter>
-      <Route path="/" exact component={Home} />
-      <Route path="/project/:name" component={Project} />
-      <Redirect to="/" />
+      <Switch>
+        <Route path="/" exact component={Home} />
+        <Route path="/project/:name" component={Project} />
+        <Redirect to="/" />
+      </Switch>
     </BrowserRouter>
   </ThemeProvider>
 );
