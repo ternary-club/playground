@@ -1,8 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Editor from 'react-simple-code-editor';
-import { highlight, languages } from 'prismjs';
-import 'prismjs/components/prism-terry';
+import AceEditor from 'react-ace';
+import 'ace-builds/src-min-noconflict/ext-language_tools';
+import 'ace-builds/src-noconflict/mode-terry';
+import 'ace-builds/src-noconflict/theme-kuroir';
 
 import 'styles/prism.css';
 
@@ -83,21 +84,45 @@ const Project: React.FC = () => {
         <Block
           footer={{ text: 'untitled-project.try', textColor: theme.green }}
         >
-          <Editor
+          <AceEditor
+            style={{ borderRadius: '10px 10px 10px 0' }}
+            mode="terry"
+            theme="kuroir"
+            name="editor"
+            onChange={value => setCode(value)}
+            fontSize={16}
+            showPrintMargin
+            showGutter
+            highlightActiveLine
+            width="100%"
+            height="100%"
             value={code}
-            onValueChange={text => setCode(text)}
-            highlight={text => highlight(text, languages.terry, 'terry')}
-            tabSize={2}
-            insertSpaces
-            padding={10}
-            style={{
-              width: '100%',
-              height: '100%',
-              fontFamily: '"Fira code", monospace',
-              fontSize: 12,
+            // annotations={[
+            //   { row: 1, column: 5, type: 'error', text: 'Some error.' },
+            // ]}
+            // markers={[
+            //   {
+            //     startRow: 1,
+            //     startCol: 2,
+            //     endRow: 1,
+            //     endCol: 4,
+            //     className: 'error-marker',
+            //     type: 'text',
+            //   },
+            // ]}
+            setOptions={{
+              tabSize: 2,
+              enableBasicAutocompletion: true,
+              enableLiveAutocompletion: true,
+              enableSnippets: false,
+              showLineNumbers: true,
+              dragEnabled: true,
+              // firstLineNumber: -10,
+              enableMultiselect: true,
+              fontFamily: '"Fira code", "monospace"',
+              scrollPastEnd: true,
+              wrap: true,
             }}
-            textareaClassName="no-selection"
-            preClassName="no-selection language-javascript"
           />
         </Block>
         <Block

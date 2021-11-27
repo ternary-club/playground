@@ -38,4 +38,9 @@ export default createGlobalStyle`
       background-color: ${({ theme }) => theme.gray};
     }
   }
+
+  .error-marker {
+    position: absolute;
+    background: ${({ theme }) => theme.red};
+  }
 `;
