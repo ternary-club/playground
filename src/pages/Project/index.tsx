@@ -34,7 +34,7 @@ interface RouteParams {
 interface IError {
   row: number;
   column: number;
-  label: string;
+  message: string;
 }
 
 const Project: React.FC = () => {
@@ -49,7 +49,7 @@ const Project: React.FC = () => {
     {
       row: 2,
       column: 2,
-      label: 'cannot read register in constant value declaration',
+      message: 'cannot read register in constant value declaration',
     },
   ]);
 
@@ -130,7 +130,7 @@ const Project: React.FC = () => {
               row: err.row - 1,
               column: err.column,
               type: 'error',
-              text: err.label,
+              text: err.message,
             }))}
             markers={errors.map(err => ({
               startRow: err.row - 1,
@@ -201,8 +201,9 @@ const Project: React.FC = () => {
             {errors.map((err, index) => (
               <Error
                 key={index}
-                location={{ row: err.row, column: err.column }}
-                label={err.label}
+                row={err.row}
+                column={err.column}
+                message={err.message}
                 onClick={() => handleErrorClick(err)}
               />
             ))}
