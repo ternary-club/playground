@@ -5,8 +5,6 @@ import 'ace-builds/src-min-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/mode-terry';
 import 'ace-builds/src-noconflict/theme-kuroir';
 
-import 'styles/prism.css';
-
 import { ReactComponent as HammerIcon } from 'assets/images/hammer.svg';
 import { ReactComponent as TriangleIcon } from 'assets/images/triangle.svg';
 import { ReactComponent as LanguageIcon } from 'assets/images/language.svg';

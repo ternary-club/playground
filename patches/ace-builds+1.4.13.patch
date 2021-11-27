@@ -43556,7 +43556,7 @@ index 0000000..b71488f
 +                      });
 +                  })();
 diff --git a/node_modules/ace-builds/src-noconflict/theme-kuroir.js b/node_modules/ace-builds/src-noconflict/theme-kuroir.js
-index 4ea0fbc..caef180 100644
+index 4ea0fbc..fb71413 100644
 --- a/node_modules/ace-builds/src-noconflict/theme-kuroir.js
 +++ b/node_modules/ace-builds/src-noconflict/theme-kuroir.js
 @@ -1,68 +1,73 @@
@@ -43674,7 +43674,7 @@ index 4ea0fbc..caef180 100644
 +  .ace-kuroir .ace_fold {\
 +  border-color: #363636;\
 +  }\
-+  .ace-kuroir .ace_constant{color:#CD6839;}.ace-kuroir .ace_constant.ace_numeric{color:#DB880F;}.ace-kuroir .ace_support{color:#104E8B;}.ace-kuroir .ace_support.ace_function{color:#005273;}.ace-kuroir .ace_support.ace_constant{color:#CF6A4C;}.ace-kuroir .ace_storage{color:#A52A2A;}.ace-kuroir .ace_invalid.ace_illegal{color:#FD1224;\
++  .ace-kuroir .ace_constant{color:#3F9ADB;}.ace-kuroir .ace_constant.ace_numeric{color:#DB880F;}.ace-kuroir .ace_support{color:#104E8B;}.ace-kuroir .ace_support.ace_function{color:#005273;}.ace-kuroir .ace_support.ace_constant{color:#CF6A4C;}.ace-kuroir .ace_storage{color:#A52A2A;}.ace-kuroir .ace_invalid.ace_illegal{color:#FD1224;\
 +  background-color:rgba(255, 6, 0, 0.15);}.ace-kuroir .ace_invalid.ace_deprecated{text-decoration:underline;\
 +  font-style:italic;\
 +  color:#FD1732;\
