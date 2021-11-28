@@ -27,36 +27,57 @@ const Home: React.FC = () => {
   const themeContext = useTheme();
 
   const [repos, setRepos] = useState<string[]>([]);
+  const [prevProjectName, setPrevProjectName] = useState('');
+  const [renameProject, setRenameProject] = useState(false);
 
   const modalRef = useRef<IModalRef>(null);
-
-  const handleRenameProject = useCallback((project: string) => {
-    console.log('Project renamed', project);
-  }, []);
-
-  const handleDeleteProject = useCallback((project: string) => {
-    console.log('Project deleted', project);
-  }, []);
-
-  const handleSaveProject = useCallback((project: string) => {
-    console.log('NAME', project);
-  }, []);
-
-  const handleCreateProject = useCallback(() => {
-    modalRef.current?.show({
-      title: 'New project',
-      onConfirm: handleSaveProject,
-    });
-  }, []);
 
   const getProjects = useCallback(async () => {
     try {
       const { data } = await api.get<{ repos: string[] }>('/');
       setRepos(data.repos);
-    } catch (err) {
-      console.log('ERR', err);
+    } catch (err: any) {
+      modalRef.current?.setError(err.response?.data.error);
     }
   }, []);
+
+  const handleRenameProject = useCallback(
+    async (project: string) => {
+      try {
+        await api.patch(`/${prevProjectName}?name=${project}`);
+        modalRef.current?.hide();
+        getProjects();
+      } catch (err: any) {
+        modalRef.current?.setError(err.response?.data.error);
+      }
+    },
+    [getProjects, prevProjectName],
+  );
+
+  const handleDeleteProject = useCallback(
+    async (project: string) => {
+      try {
+        await api.delete(`/${project}`);
+        getProjects();
+      } catch (err: any) {
+        modalRef.current?.setError(err.response?.data.error);
+      }
+    },
+    [getProjects],
+  );
+
+  const handleCreateProject = useCallback(
+    async (project: string) => {
+      try {
+        await api.put(`/${project}`);
+        modalRef.current?.hide();
+        getProjects();
+      } catch (err: any) {
+        modalRef.current?.setError(err.response?.data.error);
+      }
+    },
+    [getProjects],
+  );
 
   useEffect(() => {
     getProjects();
@@ -64,7 +85,11 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <Modal ref={modalRef} />
+      <Modal
+        title={`${renameProject ? 'Rename' : 'New'} project`}
+        onConfirm={renameProject ? handleRenameProject : handleCreateProject}
+        ref={modalRef}
+      />
       <Container>
         <TitleContainer>
           <TitleFirstLine>
@@ -87,19 +112,28 @@ const Home: React.FC = () => {
                       padding: '0 10px',
                     }}
                   >
-                    Teste
+                    {repo}
                   </Text>
                   <ProjectTools
                     style={{ marginLeft: 'auto' }}
                     name={repo}
                     color={themeContext.white}
-                    onRename={() => handleRenameProject(repo)}
+                    onRename={() => {
+                      setRenameProject(true);
+                      modalRef.current?.show(repo);
+                      setPrevProjectName(repo);
+                    }}
                     onDelete={() => handleDeleteProject(repo)}
                   />
                 </Project>
               ))}
             </Projects>
-            <Button onClick={handleCreateProject}>
+            <Button
+              onClick={() => {
+                setRenameProject(false);
+                modalRef.current?.show();
+              }}
+            >
               <PlusIcon width={36} height={36} style={{ marginRight: 15 }} />
               New project
             </Button>

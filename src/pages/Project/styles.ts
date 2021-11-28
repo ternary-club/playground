@@ -82,7 +82,7 @@ export const OutputTextContainer = styled.div`
 export const OutputText = styled.span`
   font-family: 'Fira code', 'monospace';
   font-weight: 700;
-  font-size: 40px;
+  font-size: 24px;
   color: ${({ theme }) => theme.black};
 `;
 

@@ -28,7 +28,7 @@ export const Backdrop = styled.div<IProps>`
   opacity: ${({ hidden }) => (hidden ? 0 : 1)};
 `;
 
-export const Container = styled.div<IProps & IContainerProps>`
+export const Container = styled.form<IProps & IContainerProps>`
   top: calc(50% - ${({ dimensions }) => (dimensions?.height || 0) / 2}px);
   left: calc(50% - ${({ dimensions }) => (dimensions?.width || 0) / 2}px);
   position: absolute;
@@ -64,6 +64,7 @@ export const Input = styled.input<IProps>`
   margin: 20px 0 ${({ error }) => (error ? 0 : '32px')};
   width: 100%;
   min-width: 400px;
+  font-size: 20px;
 
   ::placeholder {
     color: ${({ theme }) => theme.gray};
@@ -113,4 +114,8 @@ export const ErrorLabel = styled.span`
   font-weight: 600;
   margin: 0 0 16px 16px;
   align-self: flex-start;
+
+  :first-letter {
+    text-transform: capitalize;
+  }
 `;

@@ -1,7 +1,6 @@
 import {
   forwardRef,
   useCallback,
-  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -20,99 +19,98 @@ import {
   ErrorLabel,
 } from './styles';
 
-interface IOptions {
-  title: string;
-  onConfirm: (name: string) => void;
-  initialValue?: string;
-}
-
 export interface IModalRef {
-  show: (options: IOptions) => void;
+  show: (initialValue?: string) => void;
   hide: () => void;
   setError: (error: string) => void;
 }
 
-const Modal = forwardRef<IModalRef>((_, ref) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+interface IModalProps {
+  title: string;
+  onConfirm: (name: string) => void;
+}
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [title, setTitle] = useState('');
-  const [onConfirm, setOnConfirm] = useState<(name: string) => void>(
-    (_name: string) => null,
-  );
-  const [projectName, setProjectName] = useState('');
-  const [error, setError] = useState('');
+const Modal = forwardRef<IModalRef, IModalProps>(
+  ({ title, onConfirm }, ref) => {
+    const containerRef = useRef<HTMLFormElement>(null);
 
-  const handleOpen = useCallback((options: IOptions) => {
-    setError('');
-    setTitle(options.title);
-    setOnConfirm(options.onConfirm);
-    setProjectName(options.initialValue || '');
-    setIsModalVisible(true);
-  }, []);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [projectName, setProjectName] = useState('');
+    const [error, setError] = useState('');
 
-  const handleClose = useCallback(() => setIsModalVisible(false), []);
+    const handleOpen = useCallback((initialValue?: string) => {
+      setError('');
+      setProjectName(initialValue || '');
+      setIsModalVisible(true);
+    }, []);
 
-  useLayoutEffect(() => {
-    if (ref) {
-      if (typeof ref === 'function') {
-        ref({
-          show: (options: IOptions) => handleOpen(options),
-          hide: () => handleClose(),
-          setError: (err: string) => setError(err),
-        });
-      } else {
-        ref.current = {
-          show: (options: IOptions) => handleOpen(options),
-          hide: () => handleClose(),
-          setError: (err: string) => setError(err),
-        };
+    const handleClose = useCallback(() => setIsModalVisible(false), []);
+
+    useLayoutEffect(() => {
+      if (ref) {
+        if (typeof ref === 'function') {
+          ref({
+            show: (initialValue?: string) => handleOpen(initialValue),
+            hide: () => handleClose(),
+            setError: (err: string) => setError(err),
+          });
+        } else {
+          ref.current = {
+            show: (initialValue?: string) => handleOpen(initialValue),
+            hide: () => handleClose(),
+            setError: (err: string) => setError(err),
+          };
+        }
       }
-    }
-  }, [ref, handleOpen, handleClose]);
+    }, [ref, handleOpen, handleClose]);
 
-  useEffect(() => {
-    console.log('ON CONFIRM', onConfirm);
-  }, [onConfirm]);
-
-  return (
-    <>
-      <Backdrop onClick={handleClose} hidden={!isModalVisible} />
-      <Container
-        hidden={!isModalVisible}
-        ref={containerRef}
-        dimensions={{
-          width: containerRef.current?.clientWidth,
-          height: containerRef.current?.clientHeight,
-        }}
-      >
-        <Label>{title}</Label>
-        <Input
-          value={projectName}
-          onChange={e => setProjectName(e.target.value)}
-          placeholder="my-cool-project"
-          error={!!error}
-        />
-        {error && <ErrorLabel>{error}</ErrorLabel>}
-        <ButtonsContainer>
-          <Button outline onClick={handleClose} style={{ marginRight: 5 }}>
-            <Close width={18} height={18} style={{ marginRight: 10 }} />
-            Cancel
-          </Button>
-          <Button
-            style={{ marginLeft: 5 }}
-            onClick={() => {
-              if (typeof onConfirm === 'function') onConfirm(projectName);
-              console.log('CONFIRM', onConfirm);
-            }}
-          >
-            <Check width={20} height={20} style={{ marginRight: 10 }} />
-            Confirm
-          </Button>
-        </ButtonsContainer>
-      </Container>
-    </>
-  );
-});
+    return (
+      <>
+        <Backdrop onClick={handleClose} hidden={!isModalVisible} />
+        <Container
+          hidden={!isModalVisible}
+          ref={containerRef}
+          dimensions={{
+            width: containerRef.current?.clientWidth,
+            height: containerRef.current?.clientHeight,
+          }}
+          onSubmit={e => {
+            e.preventDefault();
+            if (typeof onConfirm === 'function') onConfirm(projectName);
+          }}
+        >
+          <Label>{title}</Label>
+          <Input
+            value={projectName}
+            onChange={e =>
+              setProjectName(
+                e.target.value.toLocaleLowerCase().replace(/ /g, '-'),
+              )
+            }
+            placeholder="my-cool-project"
+            error={!!error}
+            required
+          />
+          {error && <ErrorLabel>{error}</ErrorLabel>}
+          <ButtonsContainer>
+            <Button
+              type="button"
+              outline
+              onClick={handleClose}
+              style={{ marginRight: 5 }}
+            >
+              <Close width={18} height={18} style={{ marginRight: 10 }} />
+              Cancel
+            </Button>
+            <Button type="submit" style={{ marginLeft: 5 }}>
+              <Check width={20} height={20} style={{ marginRight: 10 }} />
+              Confirm
+            </Button>
+          </ButtonsContainer>
+        </Container>
+      </>
+    );
+  },
+);
 
 export { Modal };
