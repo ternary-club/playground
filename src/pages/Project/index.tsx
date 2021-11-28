@@ -292,7 +292,7 @@ const Project: React.FC = () => {
             <Block
               footer={{ text: 'problems', textColor: theme.darkGray }}
               containerStyle={{ maxHeight: '55vh', marginBottom: 10 }}
-              contentStyle={{ padding: '10px 15px' }}
+              contentStyle={{ padding: '10px' }}
             >
               {errors.map((err, index) => (
                 <Error
