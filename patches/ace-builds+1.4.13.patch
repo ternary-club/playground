@@ -43306,7 +43306,7 @@ index ef2c708..912dc54 100644
 +                  })();
 diff --git a/node_modules/ace-builds/src-noconflict/mode-terry.js b/node_modules/ace-builds/src-noconflict/mode-terry.js
 new file mode 100644
-index 0000000..b71488f
+index 0000000..a98bd29
 --- /dev/null
 +++ b/node_modules/ace-builds/src-noconflict/mode-terry.js
 @@ -0,0 +1,245 @@
@@ -43339,7 +43339,7 @@ index 0000000..b71488f
 +              }],
 +              operators: [{
 +                  token: "keyword.operator.terry",
-+          regex: "~|\\+|\\-|%|\\/|\\\\|\\*|\\|&|=|>|<|\\?|:|\\^|\\|"
++          regex: "~|\\+|\\-|%|\\/|\\\\|\\*|\\\\|&|=|>|<|\\?|:|\\^|\\|"
 +              }],
 +              registers: [{
 +                  token: "constant.language.terry",

@@ -212,7 +212,7 @@ const Project: React.FC = () => {
             footer={{
               text: 'output',
               textColor: theme.darkGray,
-              icon: languageIcon,
+              // icon: languageIcon,
             }}
           >
             <OutputTextContainer>
