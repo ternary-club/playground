@@ -66,7 +66,7 @@ const Project: React.FC = () => {
       const { data } = await api.get<{ '.try': string; '.ter': string }>(
         `/${name}`,
       );
-      if (!data || !data['.try'] || !data['.ter']) return;
+      if (!data) return;
       setCode(String(data['.try']));
       setTernaryCode(String(data['.ter']));
     } catch (err: any) {
@@ -109,7 +109,8 @@ const Project: React.FC = () => {
             },
           },
         );
-        if (!data || !data['.ter']) return;
+        setErrors([]);
+        if (!data) return;
         setTernaryCode(String(data['.ter']));
       } catch (err: any) {
         if (err.response?.status === 404) history.replace('/');
@@ -123,7 +124,7 @@ const Project: React.FC = () => {
   const handleRunProject = useCallback(async () => {
     try {
       const { data } = await api.post<{ out: string }>(`/${name}/run`);
-      if (!data || !data.out) return;
+      if (!data) return;
       setOutput(`> ${String(data.out)}`);
     } catch (err: any) {
       if (err.response?.status === 404) history.replace('/');
