@@ -29,6 +29,7 @@ export const LoaderContainer = styled.div<ILoaderContainerProps>`
   animation-delay: -0.16s;
   width: 1em;
   height: 4em;
+  border-radius: 10px;
 
   :before,
   :after {
@@ -36,6 +37,7 @@ export const LoaderContainer = styled.div<ILoaderContainerProps>`
     animation: ${load} 1s infinite ease-in-out;
     width: 1em;
     height: 4em;
+    border-radius: 10px;
   }
 
   :before,
