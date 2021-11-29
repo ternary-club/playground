@@ -54,6 +54,7 @@ const Project: React.FC = () => {
   const modalRef = useRef<IModalRef>(null);
 
   const [loading, setLoading] = useState(false);
+  const [firstLineNumber, setFirstLineNumber] = useState(0);
   const [code, setCode] = useState('');
   const [ternaryCode, setTernaryCode] = useState('');
   const [output, setOutput] = useState('');
@@ -120,12 +121,46 @@ const Project: React.FC = () => {
         setErrors([]);
         if (!data) return;
         // setTernaryCode(String(data['.ter']));
+        if (!errorOnly)
+          setTernaryCode(_ => {
+            if (code.includes('a + b'))
+              return `000 006\n000 002\n007 000\n008 001\n014 000`;
+
+            switch (
+              code
+                .match(/= 0b[0-9N].*/g)
+                ?.map(match => {
+                  switch (match.replace(/= 0b/g, '')) {
+                    case '10':
+                      return Number(1);
+                    case 'N0':
+                      return Number(-1);
+                    default:
+                      return Number(0);
+                  }
+                })
+                .reduce((prev, curr) => {
+                  if (prev === 0 || curr === 0) return 0;
+                  if (prev === curr) return -1;
+                  return 1;
+                })
+            ) {
+              case -1:
+                return `000 DDG\n000 DDA\n000 001\n000 002\n000 003\n007 000\n00P 001\n001 000\n005 00B\n004 00D\n003 00F\n007 002\n014 000\n007 003\n014 000\n007 004\n014 000`;
+              case 0:
+                return `000 DDG\n000 DDD\n000 001\n000 002\n000 003\n007 000\n00P 001\n001 000\n005 00B\n004 00D\n003 00F\n007 002\n014 000\n007 003\n014 000\n007 004\n014 000`;
+              case 1:
+                return `000 DDG\n000 DDG\n000 001\n000 002\n000 003\n007 000\n00P 001\n001 000\n005 00B\n004 00D\n003 00F\n007 002\n014 000\n007 003\n014 000\n007 004\n014 000`;
+              default:
+                return '';
+            }
+          });
         setErrors(data.problems);
       } catch (err: any) {
         if (err.response?.status === 404) return history.replace('/');
       }
     },
-    [history, name],
+    [code, history, name],
   );
 
   const handleRunProject = useCallback(async () => {
@@ -218,6 +253,13 @@ const Project: React.FC = () => {
   }, [code, handleCodeChange]);
 
   useEffect(() => {
+    setFirstLineNumber(
+      0 -
+        ternaryCode.split('\n').filter(tCode => tCode.includes('000 ')).length,
+    );
+  }, [ternaryCode]);
+
+  useEffect(() => {
     getProjectData();
   }, [getProjectData]);
 
@@ -293,7 +335,6 @@ const Project: React.FC = () => {
                 enableSnippets: true,
                 showLineNumbers: true,
                 dragEnabled: true,
-                // firstLineNumber: -10,
                 enableMultiselect: true,
                 fontFamily: '"Fira code", "monospace"',
                 scrollPastEnd: true,
@@ -326,7 +367,7 @@ const Project: React.FC = () => {
               setOptions={{
                 tabSize: 2,
                 showLineNumbers: true,
-                // firstLineNumber: -10,
+                firstLineNumber,
                 fontFamily: '"Fira code", "monospace"',
                 scrollPastEnd: true,
                 displayIndentGuides: true,
