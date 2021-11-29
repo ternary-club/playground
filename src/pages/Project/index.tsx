@@ -53,6 +53,7 @@ const Project: React.FC = () => {
 
   const modalRef = useRef<IModalRef>(null);
 
+  const [loading, setLoading] = useState(false);
   const [code, setCode] = useState('');
   const [ternaryCode, setTernaryCode] = useState('');
   const [output, setOutput] = useState('');
@@ -62,6 +63,7 @@ const Project: React.FC = () => {
   const ternaryEditorRef = useRef<AceEditor>(null);
 
   const getProjectData = useCallback(async () => {
+    setLoading(true);
     try {
       const { data } = await api.get<{ '.try': string; '.ter': string }>(
         `/${name}`,
@@ -70,35 +72,41 @@ const Project: React.FC = () => {
       setCode(String(data['.try']));
       setTernaryCode(String(data['.ter']));
     } catch (err: any) {
-      if (err.response.status === 404) history.replace('/');
+      if (err.response.status === 404) return history.replace('/');
     }
+    setLoading(false);
   }, [name, history]);
 
   const handleRenameProject = useCallback(
     async (project: string) => {
+      setLoading(true);
       try {
         await api.patch(`/${name}?name=${project}`);
         modalRef.current?.hide();
         history.replace(`/project/${project}`);
       } catch (err: any) {
-        if (err.response.status === 404) history.replace('/');
+        if (err.response.status === 404) return history.replace('/');
         modalRef.current?.setError(err.response?.data.error);
       }
+      setLoading(false);
     },
     [name, history],
   );
 
   const handleDeleteProject = useCallback(async () => {
+    setLoading(true);
     try {
       await api.delete(`/${name}`);
       history.replace('/');
     } catch (err: any) {
-      if (err.response.status === 404) history.replace('/');
+      if (err.response.status === 404) return history.replace('/');
     }
+    setLoading(false);
   }, [history, name]);
 
   const handleBuildProject = useCallback(
     async (errorOnly?: boolean) => {
+      setLoading(true);
       try {
         const { data } = await api.post<{ '.ter': string }>(
           `/${name}/compile`,
@@ -113,7 +121,7 @@ const Project: React.FC = () => {
         if (!data) return;
         setTernaryCode(String(data['.ter']));
       } catch (err: any) {
-        if (err.response?.status === 404) history.replace('/');
+        if (err.response?.status === 404) return history.replace('/');
         if (err.response?.status === 400)
           setErrors(err.response?.data.problems);
       }
@@ -122,13 +130,15 @@ const Project: React.FC = () => {
   );
 
   const handleRunProject = useCallback(async () => {
+    setLoading(true);
     try {
       const { data } = await api.post<{ out: string }>(`/${name}/run`);
       if (!data) return;
       setOutput(`> ${String(data.out)}`);
     } catch (err: any) {
-      if (err.response?.status === 404) history.replace('/');
+      if (err.response?.status === 404) return history.replace('/');
     }
+    setLoading(false);
   }, [history, name]);
 
   const handleErrorClick = useCallback((error: IError) => {
@@ -139,6 +149,7 @@ const Project: React.FC = () => {
 
   const handleCodeChange = useCallback(
     async (newCode: string) => {
+      setLoading(true);
       try {
         await api.post(`/${name}`, {
           '.try': newCode,
@@ -147,6 +158,7 @@ const Project: React.FC = () => {
       } catch (err: any) {
         if (err.response.status === 404) history.replace('/');
       }
+      setLoading(false);
     },
     [handleBuildProject, history, name],
   );
@@ -177,6 +189,7 @@ const Project: React.FC = () => {
       <Modal
         title="Rename project"
         onConfirm={handleRenameProject}
+        loading={loading}
         ref={modalRef}
       />
       <Container>

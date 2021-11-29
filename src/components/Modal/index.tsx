@@ -9,6 +9,10 @@ import {
 import { ReactComponent as Close } from 'assets/images/close.svg';
 import { ReactComponent as Check } from 'assets/images/check.svg';
 
+import { useTheme } from 'hooks/useTheme';
+
+import { Loader } from '..';
+
 import {
   Backdrop,
   Container,
@@ -28,10 +32,13 @@ export interface IModalRef {
 interface IModalProps {
   title: string;
   onConfirm: (name: string) => void;
+  loading?: boolean;
 }
 
 const Modal = forwardRef<IModalRef, IModalProps>(
-  ({ title, onConfirm }, ref) => {
+  ({ title, onConfirm, loading }, ref) => {
+    const theme = useTheme();
+
     const containerRef = useRef<HTMLFormElement>(null);
 
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -66,7 +73,10 @@ const Modal = forwardRef<IModalRef, IModalProps>(
 
     return (
       <>
-        <Backdrop onClick={handleClose} hidden={!isModalVisible} />
+        <Backdrop
+          onClick={() => !loading && handleClose()}
+          hidden={!isModalVisible}
+        />
         <Container
           hidden={!isModalVisible}
           ref={containerRef}
@@ -79,6 +89,9 @@ const Modal = forwardRef<IModalRef, IModalProps>(
             if (typeof onConfirm === 'function') onConfirm(projectName);
           }}
         >
+          <Backdrop hidden={!loading} style={{ borderRadius: 10 }}>
+            <Loader color={theme.lightPink} />
+          </Backdrop>
           <Label>{title}</Label>
           <Input
             value={projectName}
@@ -98,11 +111,12 @@ const Modal = forwardRef<IModalRef, IModalProps>(
               outline
               onClick={handleClose}
               style={{ marginRight: 5 }}
+              disabled={loading}
             >
               <Close width={18} height={18} style={{ marginRight: 10 }} />
               Cancel
             </Button>
-            <Button type="submit" style={{ marginLeft: 5 }}>
+            <Button type="submit" style={{ marginLeft: 5 }} disabled={loading}>
               <Check width={20} height={20} style={{ marginRight: 10 }} />
               Confirm
             </Button>

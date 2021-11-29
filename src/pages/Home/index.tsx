@@ -5,7 +5,7 @@ import { ReactComponent as PlusIcon } from 'assets/images/plus.svg';
 
 import { useTheme } from 'hooks/useTheme';
 
-import { ProjectTools, Modal, IModalRef } from 'components';
+import { ProjectTools, Modal, IModalRef, Loader } from 'components';
 
 import { api } from 'services/api';
 
@@ -24,8 +24,9 @@ import {
 } from './styles';
 
 const Home: React.FC = () => {
-  const themeContext = useTheme();
+  const theme = useTheme();
 
+  const [loading, setLoading] = useState(false);
   const [repos, setRepos] = useState<string[]>([]);
   const [prevProjectName, setPrevProjectName] = useState('');
   const [renameProject, setRenameProject] = useState(false);
@@ -33,16 +34,19 @@ const Home: React.FC = () => {
   const modalRef = useRef<IModalRef>(null);
 
   const getProjects = useCallback(async () => {
+    setLoading(true);
     try {
       const { data } = await api.get<{ repos: string[] }>('/');
       setRepos(data.repos);
     } catch (err: any) {
       modalRef.current?.setError(err.response?.data.error);
     }
+    setLoading(false);
   }, []);
 
   const handleRenameProject = useCallback(
     async (project: string) => {
+      setLoading(true);
       try {
         await api.patch(`/${prevProjectName}?name=${project}`);
         modalRef.current?.hide();
@@ -50,24 +54,28 @@ const Home: React.FC = () => {
       } catch (err: any) {
         modalRef.current?.setError(err.response?.data.error);
       }
+      setLoading(false);
     },
     [getProjects, prevProjectName],
   );
 
   const handleDeleteProject = useCallback(
     async (project: string) => {
+      setLoading(true);
       try {
         await api.delete(`/${project}`);
         getProjects();
       } catch (err: any) {
         modalRef.current?.setError(err.response?.data.error);
       }
+      setLoading(false);
     },
     [getProjects],
   );
 
   const handleCreateProject = useCallback(
     async (project: string) => {
+      setLoading(true);
       try {
         await api.put(`/${project}`);
         modalRef.current?.hide();
@@ -75,6 +83,7 @@ const Home: React.FC = () => {
       } catch (err: any) {
         modalRef.current?.setError(err.response?.data.error);
       }
+      setLoading(false);
     },
     [getProjects],
   );
@@ -88,6 +97,7 @@ const Home: React.FC = () => {
       <Modal
         title={`${renameProject ? 'Rename' : 'New'} project`}
         onConfirm={renameProject ? handleRenameProject : handleCreateProject}
+        loading={loading}
         ref={modalRef}
       />
       <Container>
@@ -103,6 +113,7 @@ const Home: React.FC = () => {
           <ProjectsContainer>
             <Text style={{ fontSize: 36, fontWeight: 600 }}>Your projects</Text>
             <Projects>
+              {loading && <Loader color={theme.pink} />}
               {repos.map(repo => (
                 <Project key={repo}>
                   <FolderIcon width={48} height={48} />
@@ -117,7 +128,7 @@ const Home: React.FC = () => {
                   <ProjectTools
                     style={{ marginLeft: 'auto' }}
                     name={repo}
-                    color={themeContext.white}
+                    color={theme.white}
                     onRename={() => {
                       setRenameProject(true);
                       modalRef.current?.show(repo);

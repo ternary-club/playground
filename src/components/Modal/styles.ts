@@ -22,10 +22,15 @@ export const Backdrop = styled.div<IProps>`
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: ${({ hidden }) => (hidden ? -10 : 9)};
+  z-index: 9;
+  transform: ${({ hidden }) =>
+    hidden ? 'translateY(-100vh)' : 'translateY(0)'};
   background: #00000085;
-  transition: all 0.2s;
+  transition: opacity 0.2s;
   opacity: ${({ hidden }) => (hidden ? 0 : 1)};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const Container = styled.form<IProps & IContainerProps>`
@@ -33,14 +38,14 @@ export const Container = styled.form<IProps & IContainerProps>`
   left: calc(50% - ${({ dimensions }) => (dimensions?.width || 0) / 2}px);
   position: absolute;
   background: ${({ theme }) => theme.lightGray};
-  z-index: ${({ hidden }) => (hidden ? -10 : 10)};
+  z-index: 10;
   padding: 32px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  transition: all 0.3s;
+  transition: transform 0.3s;
   transform: ${({ hidden }) =>
     hidden ? 'translateY(-100vh)' : 'translateY(0)'};
 `;
@@ -102,8 +107,12 @@ export const Button = styled.button<IButtonProps>`
   transition: all 0.2s;
   border: 2px solid ${({ theme }) => theme.pink};
 
-  :hover {
+  :hover:not(:disabled) {
     filter: brightness(90%);
+  }
+
+  :disabled {
+    cursor: not-allowed;
   }
 `;
 
