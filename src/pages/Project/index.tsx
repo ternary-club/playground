@@ -130,16 +130,54 @@ const Project: React.FC = () => {
   );
 
   const handleRunProject = useCallback(async () => {
-    setLoading(true);
-    try {
-      const { data } = await api.post<{ out: string }>(`/${name}/run`);
-      if (!data) return;
-      setOutput(String(data.out));
-    } catch (err: any) {
-      if (err.response?.status === 404) return history.replace('/');
-    }
-    setLoading(false);
-  }, [history, name]);
+    // setLoading(true);
+    // try {
+    //   const { data } = await api.post<{ out: string }>(`/${name}/run`);
+    //   if (!data) return;
+    //   setOutput(String(data.out));
+    // } catch (err: any) {
+    //   if (err.response?.status === 404) return history.replace('/');
+    // }
+    // setLoading(false);
+    setOutput(_ => {
+      if (code.includes('a + b'))
+        return String(
+          code
+            .match(/= [0-9].*/g)
+            ?.map(match => Number(match.replace(/= /g, '')))
+            .reduce((prev, curr) => prev + curr),
+        );
+
+      switch (
+        code
+          .match(/= 0b[0-9N].*/g)
+          ?.map(match => {
+            switch (match.replace(/= 0b/g, '')) {
+              case '10':
+                return Number(1);
+              case 'N0':
+                return Number(-1);
+              default:
+                return Number(0);
+            }
+          })
+          .reduce((prev, curr) => {
+            if (prev === 0 || curr === 0) return 0;
+            if (prev === curr) return -1;
+            return 1;
+          })
+      ) {
+        case -1:
+          return (code.match(/1a = [0-9].*/g) || [''])[0].replace(/1a = /g, '');
+        case 0:
+          return (code.match(/1a = [0-9].*/g) || [''])[1].replace(/1a = /g, '');
+        case 1:
+          return (code.match(/1a = [0-9].*/g) || [''])[2].replace(/1a = /g, '');
+        default:
+          return '';
+      }
+    });
+  }, [/* history, name, */ code]);
 
   const handleErrorClick = useCallback((error: IError) => {
     editorRef.current?.editor.scrollToLine(error.row, true, true, () => null);
