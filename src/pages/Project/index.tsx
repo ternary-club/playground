@@ -108,7 +108,7 @@ const Project: React.FC = () => {
     async (errorOnly?: boolean) => {
       setLoading(true);
       try {
-        const { data } = await api.post<{ '.ter': string }>(
+        const { data } = await api.post<{ '.ter': string; problems: any[] }>(
           `/${name}/compile`,
           undefined,
           {
@@ -119,11 +119,10 @@ const Project: React.FC = () => {
         );
         setErrors([]);
         if (!data) return;
-        setTernaryCode(String(data['.ter']));
+        // setTernaryCode(String(data['.ter']));
+        setErrors(data.problems);
       } catch (err: any) {
         if (err.response?.status === 404) return history.replace('/');
-        if (err.response?.status === 400)
-          setErrors(err.response?.data.problems);
       }
     },
     [history, name],
@@ -214,7 +213,7 @@ const Project: React.FC = () => {
   );
 
   useEffect(() => {
-    const timer = setTimeout(() => handleCodeChange(code), 1000);
+    const timer = setTimeout(() => handleCodeChange(code), 200);
     return () => clearTimeout(timer);
   }, [code, handleCodeChange]);
 
