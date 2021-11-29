@@ -134,7 +134,7 @@ const Project: React.FC = () => {
     try {
       const { data } = await api.post<{ out: string }>(`/${name}/run`);
       if (!data) return;
-      setOutput(`> ${String(data.out)}`);
+      setOutput(String(data.out));
     } catch (err: any) {
       if (err.response?.status === 404) return history.replace('/');
     }
@@ -325,7 +325,7 @@ const Project: React.FC = () => {
               }}
             >
               <OutputTextContainer>
-                <OutputText>{output}</OutputText>
+                <OutputText>&gt; {output}</OutputText>
               </OutputTextContainer>
             </Block>
           </Output>
