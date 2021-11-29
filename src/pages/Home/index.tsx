@@ -115,7 +115,7 @@ const Home: React.FC = () => {
             <Projects>
               {loading && <Loader color={theme.pink} />}
               {repos.map(repo => (
-                <Project key={repo}>
+                <Project key={repo} title={repo}>
                   <FolderIcon width={48} height={48} />
                   <Text
                     style={{
