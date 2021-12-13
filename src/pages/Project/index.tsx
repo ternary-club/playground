@@ -73,7 +73,7 @@ const Project: React.FC = () => {
       setCode(String(data['.try']));
       setTernaryCode(String(data['.ter']));
     } catch (err: any) {
-      if (err.response.status === 404) return history.replace('/');
+      if (err.response?.status === 404) return history.replace('/');
     }
     setLoading(false);
   }, [name, history]);
@@ -86,7 +86,7 @@ const Project: React.FC = () => {
         modalRef.current?.hide();
         history.replace(`/project/${project}`);
       } catch (err: any) {
-        if (err.response.status === 404) return history.replace('/');
+        if (err.response?.status === 404) return history.replace('/');
         modalRef.current?.setError(err.response?.data.error);
       }
       setLoading(false);
@@ -100,7 +100,7 @@ const Project: React.FC = () => {
       await api.delete(`/${name}`);
       history.replace('/');
     } catch (err: any) {
-      if (err.response.status === 404) return history.replace('/');
+      if (err.response?.status === 404) return history.replace('/');
     }
     setLoading(false);
   }, [history, name]);
@@ -228,7 +228,7 @@ const Project: React.FC = () => {
         });
         await handleBuildProject(true);
       } catch (err: any) {
-        if (err.response.status === 404) history.replace('/');
+        if (err.response?.status === 404) history.replace('/');
       }
       setLoading(false);
     },
@@ -300,7 +300,7 @@ const Project: React.FC = () => {
         </Header>
         <Content>
           <Block
-            footer={{ text: 'untitled-project.try', textColor: theme.green }}
+            footer={{ text: `${name}.try`, textColor: theme.green }}
             containerStyle={{ flex: 0.4 }}
           >
             <AceEditor
@@ -348,7 +348,7 @@ const Project: React.FC = () => {
           </Block>
           <Block
             footer={{
-              text: 'untitled-project.ter',
+              text: `${name}.ter`,
               textColor: theme.blue,
               icon: languageIcon,
             }}
